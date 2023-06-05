@@ -1,0 +1,84 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# ggdistrics
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of ggdistrics is to ...
+
+## Installation
+
+You can install the development version of ggdistrics from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("EvaMaeRey/ggdistrics")
+```
+
+
+
+
+
+```{r}
+library(ggdistrics)
+library(ggplot2)
+library(dplyr)
+districts_114_flat |>
+mutate(id = 1:n()) |>
+ggplot() +
+  aes(state = STATENAME, 
+      district = DISTRICT) +
+  geom_district_114(state = "New York") +
+  aes(fill = DISTRICT)
+```
+
+
+
+```{r}
+library(ggdistrics)
+library(ggplot2)
+library(dplyr)
+districts_114_flat |>
+ggplot() +
+  aes(state = STATENAME, 
+      district = DISTRICT) +
+  geom_district_114(state = "New York", linewidth = .02) +
+  aes(fill = as.numeric(DISTRICT)) + 
+  geom_district_114(state = "New York", 
+                    district = 22, color = "red", linewidth = .05)
+```
+```{r, fig.height=100, fig.width=100}
+districts_114_flat |>
+ggplot() +
+  aes(state = STATENAME, 
+      district = DISTRICT) +
+  geom_district_114(state = "New York", 
+                    district = 22, 
+                    color = "red", 
+                    linewidth = 1)
+```
+
+
+
+# lots of points...
+
+```{r cars}
+library(sf)
+sum(rapply(st_geometry(districts_114), nrow)) # big
+sum(rapply(st_geometry(ggnc::nc), nrow)) # needlessly
+
+```

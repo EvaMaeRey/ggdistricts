@@ -11,7 +11,7 @@
 #' library(dplyr)
 #' districts_114_flat |> rename(state = STATENAME, district = DISTRICT) |> compute_district_114() |> head()
 #' nc_flat |> rename(fips = FIPS) |> compute_county_nc(county = "Ashe")
-compute_district_114 <- function(data, scales, state = NULL){
+compute_district_114 <- function(data, scales, state = NULL, district = NULL, state_exclude = NULL){
 
   reference_filtered <- districts_114_reference_full
   #
@@ -26,6 +26,31 @@ compute_district_114 <- function(data, scales, state = NULL){
       reference_filtered
 
   }
+
+  if(!is.null(state_exclude)){
+
+    state_exclude %>% tolower() -> state_exclude
+
+    reference_filtered %>%
+      dplyr::filter(!(.data$STATENAME %>%
+                      tolower() %in%
+                      state_exclude)) ->
+      reference_filtered
+
+  }
+
+  if(!is.null(district)){
+
+    district %>% tolower() -> district
+
+    reference_filtered %>%
+      dplyr::filter(.data$DISTRICT %>%
+                        tolower() %in%
+                        district) ->
+      reference_filtered
+
+  }
+
 
   # to prevent overjoining
   reference_filtered %>%
