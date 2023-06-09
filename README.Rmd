@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ggdistricts
+# ggdistricts < 1.0 MB
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -37,6 +37,9 @@ devtools::install_github("EvaMaeRey/ggdistricts")
 library(ggdistricts)
 library(ggplot2)
 library(dplyr)
+
+head(districts_116_flat)
+
 districts_116_flat |>
 mutate(id = 1:n()) |>
 ggplot() +
@@ -44,6 +47,9 @@ ggplot() +
       district = DISTRICT) +
   geom_district_116(state = "New York") +
   aes(fill = DISTRICT)
+
+
+
 ```
 
 
@@ -56,18 +62,29 @@ districts_116_flat |>
 ggplot() +
   aes(state = STATE_NAME, 
       district = DISTRICT) +
-  geom_district_116(state = "New York", linewidth = .02) +
+  geom_district_116(keep_state = "New York", linewidth = .02) +
   aes(fill = as.numeric(DISTRICT)) + 
-  geom_district_116(state = "New York", 
+  geom_district_116(keep_state = "New York", 
                     district = 22, color = "red", linewidth = .05)
 ```
+
 ```{r, fig.height=100, fig.width=100}
 districts_116_flat |>
 ggplot() +
   aes(state = STATE_NAME, 
       district = DISTRICT) +
-  geom_district_116(state = "New York", 
+  geom_district_116(keep_state = "NY", 
                     district = 22, 
+                    color = "red", 
+                    linewidth = 3)
+```
+
+```{r, fig.height=100, fig.width=100}
+districts_116_flat |>
+ggplot() +
+  aes(state_abb = STATE_ABB, 
+      district = DISTRICT) +
+  geom_district_116(keep_state = "New York", 
                     color = "red", 
                     linewidth = 3)
 ```

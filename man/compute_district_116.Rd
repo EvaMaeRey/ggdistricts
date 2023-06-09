@@ -7,9 +7,9 @@
 compute_district_116(
   data,
   scales,
-  state = NULL,
+  keep_state = NULL,
   district = NULL,
-  state_exclude = NULL
+  drop_state = NULL
 )
 }
 \arguments{

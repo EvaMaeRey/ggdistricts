@@ -10,30 +10,37 @@
 #' @examples
 #' library(dplyr)
 #' #districts_116_flat |> rename(state = STATE_NAME, district = DISTRICT) |> compute_district_116() |> head()
-compute_district_116 <- function(data, scales, state = NULL, district = NULL, state_exclude = NULL){
+compute_district_116 <- function(data, scales, keep_state = NULL, district = NULL, drop_state = NULL){
 
   reference_filtered <- districts_116_reference_full
   #
-  if(!is.null(state)){
+  if(!is.null(keep_state)){
 
-    state %>% tolower() -> state
+    keep_state %>% tolower() -> keep_state
 
     reference_filtered %>%
-      dplyr::filter(.data$STATE_NAME %>%
+      dplyr::filter(
+        .data$STATE_NAME %>%
                       tolower() %in%
-                      state) ->
+                      keep_state |
+                    .data$STATE_ABB %>%
+                      tolower() %in%
+                      keep_state ) ->
       reference_filtered
 
   }
 
-  if(!is.null(state_exclude)){
+  if(!is.null(drop_state)){
 
-    state_exclude %>% tolower() -> state_exclude
+    drop_state %>% tolower() -> drop_state
 
     reference_filtered %>%
       dplyr::filter(!(.data$STATE_NAME %>%
                       tolower() %in%
-                      state_exclude)) ->
+                        drop_state  |
+                        .data$STATE_ABB %>%
+                        tolower() %in%
+                        drop_state )) ->
       reference_filtered
 
   }
@@ -53,15 +60,19 @@ compute_district_116 <- function(data, scales, state = NULL, district = NULL, st
 
   # to prevent overjoining
   reference_filtered %>%
-    dplyr::select("STATE_NAME","DISTRICT",  "geometry", "xmin",
-                  "xmax", "ymin", "ymax") ->
+    dplyr::select("STATE_NAME", "DISTRICT", "STATE_ABB", "geometry", "xmin",
+                  "xmax", "ymin", "ymax") %>%
+    rename(state =  STATE_NAME) %>%
+    rename(district = DISTRICT) %>%
+    rename(state_abb = STATE_ABB) ->
     reference_filtered
 
 
   data %>%
-    dplyr::inner_join(reference_filtered,
-                      by = c("state" = "STATE_NAME",
-                                   "district" = "DISTRICT")) %>%
+    dplyr::inner_join(reference_filtered#,
+                      # by = c("state" = "STATE_NAME",
+                      #              "district" = "DISTRICT")
+                      ) %>%
     dplyr::mutate(group = -1) %>%
     dplyr::select(-state, -district)
 

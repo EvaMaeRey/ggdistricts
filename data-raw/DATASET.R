@@ -8,16 +8,21 @@
 #   fpath <- "data-raw/districts114/districtShapes/districts114.shp"
 # districts_114 <- sf::st_read(fpath)
 
+library(tidyverse)
 
 unzip(zipfile = "data-raw/cb_2018_us_cd116_20m.zip", exdir = "data-raw/districts116")
 districts_116_raw <- sf::st_read("data-raw/districts116/cb_2018_us_cd116_20m.shp")
 
+str(districts_116_raw)
 
 read.csv("https://gist.githubusercontent.com/dantonnoriega/bf1acd2290e15b91e6710b6fd3be0a53/raw/11d15233327c8080c9646c7e1f23052659db251d/us-state-ansi-fips.csv") %>%
   rename(STATE_FIPS = st) %>%
   rename(STATE_NAME = stname) %>%
-  rename(STATE_ABB = stusps) ->
+  rename(STATE_ABB = stusps) %>%
+  mutate(STATE_ABB = stringr::str_trim(STATE_ABB)) ->
 state_fips_table
+
+str(state_fips_table)
 
 ###### completion of step two, apply helper functions to get reference geometry
 
