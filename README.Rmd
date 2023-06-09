@@ -13,20 +13,20 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ggdistrics
+# ggdistricts
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of ggdistrics is to ...
+The goal of ggdistricts is to ...
 
 ## Installation
 
-You can install the development version of ggdistrics from [GitHub](https://github.com/) with:
+You can install the development version of ggdistricts from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("EvaMaeRey/ggdistrics")
+devtools::install_github("EvaMaeRey/ggdistricts")
 ```
 
 
@@ -34,42 +34,42 @@ devtools::install_github("EvaMaeRey/ggdistrics")
 
 
 ```{r}
-library(ggdistrics)
+library(ggdistricts)
 library(ggplot2)
 library(dplyr)
-districts_114_flat |>
+districts_116_flat |>
 mutate(id = 1:n()) |>
 ggplot() +
-  aes(state = STATENAME, 
+  aes(state = STATE_NAME, 
       district = DISTRICT) +
-  geom_district_114(state = "New York") +
+  geom_district_116(state = "New York") +
   aes(fill = DISTRICT)
 ```
 
 
 
 ```{r}
-library(ggdistrics)
+library(ggdistricts)
 library(ggplot2)
 library(dplyr)
-districts_114_flat |>
+districts_116_flat |>
 ggplot() +
-  aes(state = STATENAME, 
+  aes(state = STATE_NAME, 
       district = DISTRICT) +
-  geom_district_114(state = "New York", linewidth = .02) +
+  geom_district_116(state = "New York", linewidth = .02) +
   aes(fill = as.numeric(DISTRICT)) + 
-  geom_district_114(state = "New York", 
+  geom_district_116(state = "New York", 
                     district = 22, color = "red", linewidth = .05)
 ```
 ```{r, fig.height=100, fig.width=100}
-districts_114_flat |>
+districts_116_flat |>
 ggplot() +
-  aes(state = STATENAME, 
+  aes(state = STATE_NAME, 
       district = DISTRICT) +
-  geom_district_114(state = "New York", 
+  geom_district_116(state = "New York", 
                     district = 22, 
                     color = "red", 
-                    linewidth = 1)
+                    linewidth = 3)
 ```
 
 
@@ -78,7 +78,7 @@ ggplot() +
 
 ```{r cars}
 library(sf)
-sum(rapply(st_geometry(districts_114), nrow)) # big
+sum(rapply(st_geometry(districts_116), nrow)) # big
 sum(rapply(st_geometry(ggnc::nc), nrow)) # needlessly
 
 ```
