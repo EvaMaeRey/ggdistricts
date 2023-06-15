@@ -9,10 +9,10 @@
 #'
 #' @examples
 #' library(dplyr)
-#' #districts_116_flat |> rename(state = STATE_NAME, district = DISTRICT) |> compute_district_116() |> head()
-compute_district_116 <- function(data, scales, keep_state = NULL, keep_district = NULL, drop_state = NULL){
+#' #districts_118_flat |> rename(state = STATE_NAME, district = DISTRICT) |> compute_district_118() |> head()
+compute_district_118 <- function(data, scales, keep_state = NULL, keep_district = NULL, drop_state = NULL){
 
-  reference_filtered <- districts_116_reference_full
+  reference_filtered <- districts_118_reference_full
   #
   if(!is.null(keep_state)){
 
@@ -82,9 +82,9 @@ compute_district_116 <- function(data, scales, keep_state = NULL, keep_district 
 }
 
 
-StatDistrict116 <- ggplot2::ggproto(`_class` = "StatDistrict116",
+StatDistrict118 <- ggplot2::ggproto(`_class` = "StatDistrict118",
                                  `_inherit` = ggplot2::Stat,
-                                 compute_panel = compute_district_116,
+                                 compute_panel = compute_district_118,
                                  default_aes = ggplot2::aes(geometry =
                                                               ggplot2::after_stat(geometry)))
 
@@ -107,13 +107,13 @@ StatDistrict116 <- ggplot2::ggproto(`_class` = "StatDistrict116",
 #'
 #' library(ggplot2)
 #' library(dplyr)
-#' districts_116_flat |>
+#' districts_118_flat |>
 #' mutate(id = 1:n()) |>
 #' ggplot() +
 #' aes(state = STATE_NAME, district = DISTRICT) +
-#' geom_district_116(keep_state = "New York") +
+#' geom_district_118(keep_state = "New York") +
 #' aes(fill = id)
-geom_district_116 <- function(
+geom_district_118 <- function(
   mapping = NULL,
   data = NULL,
   position = "identity",
@@ -123,7 +123,7 @@ geom_district_116 <- function(
 ) {
 
   c(ggplot2::layer_sf(
-    stat = StatDistrict116,  # proto object from step 2
+    stat = StatDistrict118,  # proto object from step 2
     geom = ggplot2::GeomSf,  # inherit other behavior
     data = data,
     mapping = mapping,

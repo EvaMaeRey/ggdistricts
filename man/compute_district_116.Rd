@@ -8,7 +8,7 @@ compute_district_116(
   data,
   scales,
   keep_state = NULL,
-  district = NULL,
+  keep_district = NULL,
   drop_state = NULL
 )
 }

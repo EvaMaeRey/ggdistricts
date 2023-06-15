@@ -11,7 +11,11 @@
 library(tidyverse)
 
 unzip(zipfile = "data-raw/cb_2018_us_cd116_20m.zip", exdir = "data-raw/districts116")
+unzip(zipfile = "data-raw/cb_2022_us_cd118_20m.zip", exdir = "data-raw/districts118")
+
 districts_116_raw <- sf::st_read("data-raw/districts116/cb_2018_us_cd116_20m.shp")
+districts_118_raw <- sf::st_read("data-raw/districts118/cb_2022_us_cd118_20m.shp")
+
 
 str(districts_116_raw)
 
@@ -29,16 +33,32 @@ str(state_fips_table)
 library(tidyverse)
 districts_116_raw %>%
   rename(DISTRICT = CD116FP) %>%
-  mutate(DISTRICT = as.numeric(DISTRICT)) %>%
   mutate(STATE_FIPS = as.numeric(STATEFP)) %>%
   select(-STATEFP) %>%
   left_join(state_fips_table ) ->
 districts_116
 
+districts_116 %>% filter(DISTRICT == "00" |
+                           DISTRICT == "98" |
+                           is.na(DISTRICT))
+
+library(tidyverse)
+districts_118_raw %>%
+  rename(DISTRICT = CD118FP) %>%
+  mutate(STATE_FIPS = as.numeric(STATEFP)) %>%
+  select(-STATEFP) %>%
+  left_join(state_fips_table ) ->
+  districts_118
+
+districts_118 %>% filter(DISTRICT == "00" |
+                           DISTRICT == "98" |
+                           is.na(DISTRICT))
+
 ### Step 00 make that data available in the package if desired
 
 # usethis::use_data(districts_114, overwrite = TRUE)
 usethis::use_data(districts_116, overwrite = TRUE)
+usethis::use_data(districts_118, overwrite = TRUE)
 
 
 ### Step 1 drop geometry and select columns of interest for demonstration purposes to make available
@@ -51,61 +71,35 @@ districts_116 |>
   sf::st_drop_geometry() ->
   districts_116_flat
 
+districts_118 |>
+  sf::st_drop_geometry() ->
+  districts_118_flat
+
 # usethis::use_data(districts_114_flat, overwrite = TRUE)
 usethis::use_data(districts_116_flat, overwrite = TRUE)
+usethis::use_data(districts_118_flat, overwrite = TRUE)
 
 
 ##### Step 2 use functions below if possible to create a reference data frame
 ##### for use in the compute panel function in ggplot2
-
-##### Helper function 2.a
-bbox_to_df <- function(bbox = sf::st_bbox(nc)){
-
-  data.frame(xmin = bbox[[1]],
-             ymin = bbox[[2]],
-             xmax = bbox[[3]],
-             ymax = bbox[[4]])
-
-}
-
-
-####### helper function 2.b
-add_row_bounding_box <- function(data = nc){
-
-  for (i in 1:nrow(data)){
-
-    if(i == 1){df <- data[i,] |> sf::st_bbox() |> bbox_to_df() }else{
-
-      dplyr::bind_rows(df,
-                       data[i,] |> sf::st_bbox() |> bbox_to_df()) ->
-        df
-    }
-
-    df
-
-  }
-
-  dplyr::bind_cols(df, data)
-
-}
-
-###### helper function 2.c.
-create_geometries_reference <- function(sfdata = nc,
-                                        id_cols = c(NAME, FIPS),
-                                        geometry = geometry){
-
-  sfdata |>
-    add_row_bounding_box() |>
-    dplyr::select({{id_cols}}, xmin, ymin, xmax, ymax, geometry)
-
-}
-
-
-create_geometries_reference(sfdata = districts_116,
-                            id_cols = c(STATE_FIPS, STATE_NAME, STATE_ABB, DISTRICT)) ->
+library(sf)
+ggnc:::create_geometries_reference(sfdata = districts_116,
+                            id_cols = c(STATE_FIPS,
+                                        STATE_NAME,
+                                        STATE_ABB,
+                                        DISTRICT)) ->
   districts_116_reference_full
 
+ggnc:::create_geometries_reference(sfdata = districts_118,
+                                  id_cols = c(STATE_FIPS,
+                                              STATE_NAME,
+                                              STATE_ABB,
+                                              DISTRICT)) ->
+  districts_118_reference_full
+
+
 usethis::use_data(districts_116_reference_full, overwrite = TRUE)
+usethis::use_data(districts_118_reference_full, overwrite = TRUE)
 
 
 # ###### completion of step two, apply helper functions to get reference geometry

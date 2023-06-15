@@ -35,11 +35,11 @@ library(dplyr)
 head(districts_116_flat)
 #>   DISTRICT      AFFGEOID GEOID LSAD CDSESSN      ALAND    AWATER STATE_FIPS
 #> 1       10 5001600US3410  3410   C2     116  196397289  12474852         34
-#> 2        5 5001600US4205  4205   C2     116  548506604  26310378         42
+#> 2       05 5001600US4205  4205   C2     116  548506604  26310378         42
 #> 3       12 5001600US0612  0612   C2     116  100885569 211661576          6
-#> 4        3 5001600US1203  1203   C2     116 9232593580 722972427         12
+#> 4       03 5001600US1203  1203   C2     116 9232593580 722972427         12
 #> 5       45 5001600US0645  0645   C2     116  856078764   5161857          6
-#> 6        7 5001600US1207  1207   C2     116 1017471375 110917454         12
+#> 6       07 5001600US1207  1207   C2     116 1017471375 110917454         12
 #>     STATE_NAME STATE_ABB
 #> 1   New Jersey        NJ
 #> 2 Pennsylvania        PA
@@ -53,10 +53,24 @@ mutate(id = 1:n()) |>
 ggplot() +
   aes(state = STATE_NAME, 
       district = DISTRICT) +
-  geom_district_116(state = "New York") +
-  aes(fill = DISTRICT)
-#> Warning in ggplot2::layer_sf(stat = StatDistrict116, geom = ggplot2::GeomSf, :
-#> Ignoring unknown parameters: `state`
+  geom_district_116(drop_state = c("Alaska", "Hawaii")) +
+  aes(fill = STATE_ABB) + 
+  labs(title = "116th")->
+plot_116th
+
+districts_118_flat |>
+mutate(id = 1:n()) |>
+ggplot() +
+  aes(state = STATE_NAME, 
+      district = DISTRICT) +
+  geom_district_118(drop_state = c("Alaska", "Hawaii")) +
+  aes(fill = STATE_ABB) + 
+  labs(title = "118th") ->
+plot_118th
+
+library(patchwork)
+(plot_116th / plot_118th )+ plot_layout(guides = "collect")
+#> Joining with `by = join_by(state, district)`
 #> Joining with `by = join_by(state, district)`
 ```
 
@@ -70,10 +84,20 @@ districts_116_flat |>
 ggplot() +
   aes(state = STATE_NAME, 
       district = DISTRICT) +
-  geom_district_116(keep_state = "New York", linewidth = .02) +
-  aes(fill = as.numeric(DISTRICT)) + 
-  geom_district_116(keep_state = "New York", 
-                    district = 22, color = "red", linewidth = .05)
+  geom_district_116(keep_state = "New York") + 
+  labs(title = "116th") ->
+plot_116th_ny
+
+districts_118_flat |>
+ggplot() +
+  aes(state = STATE_NAME, 
+      district = DISTRICT) +
+  geom_district_118(keep_state = "New York") + 
+  labs(title = "118th")->
+plot_118th_ny
+
+library(patchwork)
+plot_116th_ny + plot_118th_ny
 #> Joining with `by = join_by(state, district)`
 #> Joining with `by = join_by(state, district)`
 ```
@@ -81,33 +105,25 @@ ggplot() +
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
 ``` r
-districts_116_flat |>
-ggplot() +
-  aes(state = STATE_NAME, 
-      district = DISTRICT) +
-  geom_district_116(keep_state = "NY", 
-                    district = 22, 
-                    color = "red", 
-                    linewidth = 3)
+
+
+(plot_116th_ny + 
+  geom_district_116(keep_state = "New York", 
+                    keep_district = 22, fill = "darkred")) +
+(plot_118th_ny + 
+  geom_district_118(keep_state = "New York", 
+                    keep_district = 22, fill = "darkred")) 
+#> Joining with `by = join_by(state, district)`
+#> Joining with `by = join_by(state, district)`
+#> Joining with `by = join_by(state, district)`
 #> Joining with `by = join_by(state, district)`
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
-
-``` r
-districts_116_flat |>
-ggplot() +
-  aes(state_abb = STATE_ABB, 
-      district = DISTRICT) +
-  geom_district_116(keep_state = "New York", 
-                    color = "red", 
-                    linewidth = 3)
-#> Joining with `by = join_by(state_abb, district)`
-```
-
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-3-2.png" width="100%" />
 
 # lots of points…
+
+This was a note about previous files in use
 
 ``` r
 library(sf)
