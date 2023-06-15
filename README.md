@@ -55,7 +55,7 @@ ggplot() +
       district = DISTRICT) +
   geom_district_116(drop_state = c("Alaska", "Hawaii")) +
   aes(fill = STATE_ABB) + 
-  labs(title = "116th")->
+  labs(title = "116th CDs January 2019-2021")->
 plot_116th
 
 districts_118_flat |>
@@ -65,7 +65,7 @@ ggplot() +
       district = DISTRICT) +
   geom_district_118(drop_state = c("Alaska", "Hawaii")) +
   aes(fill = STATE_ABB) + 
-  labs(title = "118th") ->
+  labs(title = "118th CDs January 2023-2025") ->
 plot_118th
 
 library(patchwork)
@@ -85,7 +85,7 @@ ggplot() +
   aes(state = STATE_NAME, 
       district = DISTRICT) +
   geom_district_116(keep_state = "New York") + 
-  labs(title = "116th") ->
+  labs(title = "116th CDs January 2019-2021") ->
 plot_116th_ny
 
 districts_118_flat |>
@@ -93,7 +93,7 @@ ggplot() +
   aes(state = STATE_NAME, 
       district = DISTRICT) +
   geom_district_118(keep_state = "New York") + 
-  labs(title = "118th")->
+  labs(title = "118th CDs January 2023-2025")->
 plot_118th_ny
 
 library(patchwork)
